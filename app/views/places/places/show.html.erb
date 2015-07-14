@@ -2,13 +2,14 @@
 <% if @place %>
     <ul>
         <p>Name:        <%= @place.place_name %></p>
-        <p>Description: <%= @place.place_description</p>
+        <p>Description: <%= @place.place_description %></p>
+    </ul>
 <% else %>
     <p>Unable to find a Place.</p>
 <% end %>
 
 <p><ul>
 <li><%= link_to "Select a Place", places_path %></li>
-<li><%= link_to "Create a new Place", places_create_path %></li>
+<li><%= link_to "Create a new Place", create_path %></li>
 </ul></p>
 

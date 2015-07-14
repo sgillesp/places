@@ -32,7 +32,8 @@ module Places
 
     def show
         # try to find the place, but catch if the place cannot be found
-        @place = Place.find(:id)
+        @place = Place.find(params[:id])
+
     rescue ::Mongoid::Errors::DocumentNotFound => err
         flash[:message] = "No such Place in database."
         render 'index'
