@@ -4,6 +4,7 @@ require File.expand_path("../dummy/config/environment.rb")
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'factory_girl_rails'
+require 'rails/mongoid'
 
 Rails.backtrace_cleaner.remove_silencers!
 

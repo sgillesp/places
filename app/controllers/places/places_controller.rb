@@ -3,7 +3,9 @@ require 'mongoid'
 
 module Places
   class PlacesController < ApplicationController
+    
     def index
+        @places = Place.all
     end
 
     def new
@@ -13,7 +15,7 @@ module Places
     def create
         @place = Place.new(place_params)
         if @place.save
-            redirect_to places_create_path, :notice => "Created place"
+            redirect_to root_url, :notice => "Created place"
         else
             render 'new'
         end
@@ -30,7 +32,7 @@ module Places
 
     def show
         # try to find the place, but catch if the place cannot be found
-        @place = Place.find(:place_name)
+        @place = Place.find(:id)
     rescue ::Mongoid::Errors::DocumentNotFound => err
         flash[:message] = "No such Place in database."
         render 'index'
@@ -49,7 +51,7 @@ module Places
     private
 
         def place_params
-            params.require(:place_name).permit(:place_description)
+            params.require(:place).permit(:place_name, :place_description)
         end
   end
 end

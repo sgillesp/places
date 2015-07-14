@@ -2,8 +2,15 @@
 
 <% if @places %>
     <% for place in @places %>
+        <p><%= place.place_name %></p>
+        <p><%= place.place_description %></p>
         <%= link_to place.place_name, place %>
     <% end %>
 <% else %>
     <p>No places defined.</p>
 <% end %>
+
+<p><ul>
+<li><%= link_to "Select a Place", places_path %></li>
+<li><%= link_to "Create a new Place", create_path %></li>
+</ul></p>
