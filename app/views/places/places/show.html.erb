@@ -1,8 +1,8 @@
 <h2> Info on a Place</h2>
 <% if @place %>
     <ul>
-        <p>Name:        <%= @place.place_name %></p>
-        <p>Description: <%= @place.place_description %></p>
+        <p>Name:        <%= @place.name %></p>
+        <p>Description: <%= @place.description %></p>
     </ul>
 <% else %>
     <p>Unable to find a Place.</p>
@@ -11,5 +11,6 @@
 <p><ul>
 <li><%= link_to "Select a Place", places_path %></li>
 <li><%= link_to "Create a new Place", create_path %></li>
+<li><%= link_to "Edit this place", edit_place_path(@place.id) %></li>
 </ul></p>
 

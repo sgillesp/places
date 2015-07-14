@@ -20,8 +20,8 @@ module Places
     # end
     # public
     # data fields for this class
-    field :place_name, type: String         # name of place
-    field :place_description, type: String  # description
+    field :name, type: String         # name of place
+    field :description, type: String  # description
 
     # relationships to other places/objects; each place may have multiple child
     # places. If the parent place is deleted, then an error is raised as the children

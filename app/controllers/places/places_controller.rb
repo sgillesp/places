@@ -49,6 +49,49 @@ module Places
         render 'index'
     end
 
+    def edit 
+        # try to find the place, but catch if the place cannot be found
+        @place = Place.find(params[:id])
+
+    rescue ::Mongoid::Errors::DocumentNotFound => err
+        flash[:message] = "No such Place in database."
+        render 'index'
+    rescue ::Moped::Errors::OperationFailure => err
+        # check for the appropriate error message indicating a duplicate index
+        # if err.message =~ /name_index/
+        #     @place.errors.add(:email, "already exists for another account")
+        # else
+        #     @place.errors.add(:base, err.message)
+        # end        
+        flash[:message] = "Duplicate entry for Place"
+
+        render 'index'
+    end
+
+    def update
+        # try to find the place, but catch if the place cannot be found
+        @place = Place.find(params[:id])
+        if @place.update_attributes(place_params)
+            redirect_to(:action => 'show', :id => @place.id)
+        else
+            render 'edit'
+        end
+
+    rescue ::Mongoid::Errors::DocumentNotFound => err
+        flash[:message] = "No such Place in database."
+        render 'edit'
+    rescue ::Moped::Errors::OperationFailure => err
+        # check for the appropriate error message indicating a duplicate index
+        # if err.message =~ /name_index/
+        #     @place.errors.add(:email, "already exists for another account")
+        # else
+        #     @place.errors.add(:base, err.message)
+        # end        
+        flash[:message] = "Duplicate entry for Place"
+
+        render 'edit'
+    end
+
     private
 
         def place_params
