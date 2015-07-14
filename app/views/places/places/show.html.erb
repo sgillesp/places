@@ -1,2 +1,14 @@
-<h1>Places#show</h1>
-<p>Find me in app/views/places/places/show.html.erb</p>
+<h2> Info on a Place</h2>
+<% if @place %>
+    <ul>
+        <p>Name:        <%= @place.place_name %></p>
+        <p>Description: <%= @place.place_description</p>
+<% else %>
+    <p>Unable to find a Place.</p>
+<% end %>
+
+<p><ul>
+<li><%= link_to "Select a Place", places_path %></li>
+<li><%= link_to "Create a new Place", places_create_path %></li>
+</ul></p>
+

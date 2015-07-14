@@ -1,2 +1,9 @@
-<h1>Places#index</h1>
-<p>Find me in app/views/places/places/index.html.erb</p>
+<h2>Select a place</h2>
+
+<% if @places %>
+    <% for place in @places %>
+        <%= link_to place.place_name, place %>
+    <% end %>
+<% else %>
+    <p>No places defined.</p>
+<% end %>

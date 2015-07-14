@@ -1,0 +1,17 @@
+<h1>Create a new place:</h1>
+
+
+<%= form_for @place do |f| %>
+    <%= render 'shared/error_messages' %>
+
+    <p>
+        <%= f.label :place_name %><br />
+        <%= f.text_field :place_name %>
+    </p>    
+    <p>
+        <%= f.label :place_description %><br />
+        <%= f.text_field :place_description %>
+    </p>
+  
+    <%= f.submit "Create a place!" %>
+<% end %>   
