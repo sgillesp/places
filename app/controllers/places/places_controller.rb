@@ -105,10 +105,105 @@ module Places
         render 'edit'
     end
 
+    def addchild
+        @place = Place.find(params[:id])
+        if @place
+            child = Place.find(params[:place])
+            if child 
+                if @place.add_child(child)
+                    if @place.save()
+                        flash[:message] = "#{child.name} added to #{@place.name}"
+                    else
+                        flash[:error] = "unable to save #{@place.name}, after attempted addition of child #{child.name}"
+                    end
+                else
+                    flash[:error] = "unable to add #{child.name} to #{@place.name}"
+                end
+            else
+                flash[:error] = "could not find child #{:place.id}"
+            end
+        else
+            flash[:error] = "could not find place, corresponding to #{:id}"
+        end
+        # ?? no need to redirect, right? - fall back to page (i.e. edit)
+    
+        render 'edit'
+
+    # this should not happen if raise_not_found_error = false in mongoid.yml
+    rescue ::Mongoid::Errors::DocumentNotFound => err
+            flash[:error] = "No such Place in database."
+            render 'edit'
+    end
+
+    def remchild
+        @place = Place.find(params[:id])
+        if @place
+            child = Place.find(params[:place])
+            if child 
+                if @place.remove_child(child)
+                    if @place.save()
+                        flash[:message] = "#{child.name} removed from #{@place.name}"
+                    else
+                        flash[:error] = "unable to save #{@place.name}, after attempted removal of child #{child.name}"
+                    end
+                else
+                    flash[:error] = "unable to remove #{child.name} from #{@place.name}"
+                end
+            else
+                flash[:error] = "could not find child #{:place.id} in #{@place.name}"
+            end
+        else
+            flash[:error] = "could not find place, corresponding to #{:id}"
+        end
+        # ?? no need to redirect, right? - fall back to page (i.e. edit)
+    
+        render 'edit'
+
+        # this should not happen if raise_not_found_error = false in mongoid.yml
+    rescue ::Mongoid::Errors::DocumentNotFound => err
+            flash[:error] = "No such Place in database."
+            render 'edit'
+    end
+
+    def breakparent
+        @place = Place.find(params[:id])
+        if @place
+            # this could be made more complex so as to avoid specifying whether there is or 
+            # is not a single parent (not enforcing tree structure in the controller)
+            @place.remove_parent
+        else
+            flash[:error] = "could not find place, corresponding to #{:id}"
+        end
+
+        render 'edit'
+
+    rescue ::Mongoid::Errors::DocumentNotFound => err
+        flash[:error] = "No such Place in database."
+        render 'edit'
+    end
+
     private
+        # actual method is hidden to keep hidden
+        def do_addchild(pm)
+            @place.add_child(Place.find(params[:place]))
+        end
+
+        def do_remchild(pm)
+            @place.remove_child(Place.find(params[:place]))
+        end
 
         def place_params
             params.require(:place).permit(:name, :description)
+        end
+
+        def add_params
+            params.require(:place)
+            params.permit(:addid)
+        end
+
+        def rem_params
+            params.require(:place)
+            params.permit(:remid)
         end
   end
 end

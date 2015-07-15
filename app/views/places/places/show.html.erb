@@ -3,6 +3,18 @@
     <ul>
         <p>Name:        <%= @place.name %></p>
         <p>Description: <%= @place.description %></p>
+        <h3>Parent:</h3>
+        <% if @place.parent %>
+            <li><%= link_to @place.parent.name, @place.parent %></li>
+        <% end %>
+        <h3>Children:</h3>
+        <% if @place.children.length > 0 %>
+            <% for child in @place.children do %>
+                <%= link_to child.name, child %>
+            <% end %> 
+        <% else %>
+            <p>No children</p>
+        <% end %>
     </ul>
 <% else %>
     <p>Unable to find a Place.</p>
@@ -12,5 +24,6 @@
 <li><%= link_to "Select a Place", places_path %></li>
 <li><%= link_to "Create a new Place", create_path %></li>
 <li><%= link_to "Edit this place", edit_place_path(@place.id) %></li>
+
 </ul></p>
 
