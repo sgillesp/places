@@ -31,6 +31,13 @@ module Places
     end
 
     def show
+        # must have a valid :id to show that 
+        if params[:id] == nil
+            flash[:message] = "No such Place in database"
+            render 'index'
+            return
+        end
+
         # try to find the place, but catch if the place cannot be found
         @place = Place.find(params[:id])
 
