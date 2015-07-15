@@ -42,7 +42,7 @@ module Places
         @place = Place.find(params[:id])
 
     rescue ::Mongoid::Errors::DocumentNotFound => err
-        flash[:message] = "No such Place in database."
+        flash[:error] = "No such Place in database."
         render 'index'
     rescue ::Moped::Errors::OperationFailure => err
         # check for the appropriate error message indicating a duplicate index
@@ -61,7 +61,7 @@ module Places
         @place = Place.find(params[:id])
 
     rescue ::Mongoid::Errors::DocumentNotFound => err
-        flash[:message] = "No such Place in database."
+        flash[:error] = "No such Place in database."
         render 'index'
     rescue ::Moped::Errors::OperationFailure => err
         # check for the appropriate error message indicating a duplicate index
@@ -78,14 +78,20 @@ module Places
     def update
         # try to find the place, but catch if the place cannot be found
         @place = Place.find(params[:id])
-        if @place.update_attributes(place_params)
-            redirect_to(:action => 'show', :id => @place.id)
+        if @place.update_attributes(place_params) 
+            if @place.save
+                flash[:message] = "#{@place.name} updated"
+                redirect_to :action => 'show', :id => @place.id
+            else
+                redirect_to(:action => 'show', :id => @place.id, :error => "Utter failure".red)
+            end
         else
+            puts "BAD NEWS".red.bold
             render 'edit'
         end
 
     rescue ::Mongoid::Errors::DocumentNotFound => err
-        flash[:message] = "No such Place in database."
+        flash[:error] = "No such Place in database."
         render 'edit'
     rescue ::Moped::Errors::OperationFailure => err
         # check for the appropriate error message indicating a duplicate index
@@ -102,7 +108,7 @@ module Places
     private
 
         def place_params
-            params.require(:place).permit(:place_name, :place_description)
+            params.require(:place).permit(:name, :description)
         end
   end
 end

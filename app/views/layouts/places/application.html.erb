@@ -8,11 +8,8 @@
 </head>
 <body>
 
-<%= render 'shared/error_messages' %>
-
-<% flash.each do |name, msg| %>
-    <%= content_tag :div, msg, :id => "flash_${name}" %>
-<% end %>
+<%= display_flash_messages %> 
+<%= display_flash_errors %>
 
 <%= yield %>
 
