@@ -7,12 +7,12 @@ namespace :db do
         # method which generates entries
         def pop_places (count, ptype = 'city')
 
-            print "Creating #{count} #{ptype} in ".green; print "#{Rails.env}".green.bold; print " database ".green
+            print "Creating #{count} "; print "#{count > 1 ? ptype.pluralize : ptype} in ".green; print "#{Rails.env}".green.bold; print " database ".green
             
             # include all of the factories in spec
             Dir['./spec/factories/*.rb'].each { |f| require f.to_s }
             
-            dval = (count / 10) || 1
+            dval = [ (count / 10), 1 ].max
             for i in 1..count
                 place = FactoryGirl.create(:random_place_generator, ptype.intern)
                 if i % dval == 0
