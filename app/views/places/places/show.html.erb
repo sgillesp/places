@@ -1,20 +1,20 @@
 <h2> Info on a Place</h2>
 <% if @place %>
     <ul>
-        <p>Name:        <%= @place.name %></p>
+    
+        <p>Name:        <%= link_to @place.name, @place %></p>
         <p>Description: <%= @place.description %></p>
-        <h3>Parent:</h3>
+
         <% if @place.parent %>
+        <h3>Parent:</h3>
             <li><%= link_to @place.parent.name, @place.parent %></li>
         <% end %>
-        <h3>Children:</h3>
-        <% if @place.children.length > 0 %>
-            <% for child in @place.children do %>
-                <%= link_to child.name, child %>
-            <% end %> 
-        <% else %>
-            <p>No children</p>
+
+        <% if @place.has_children? %>
+            <h3>Children:</h3>
+            <%= render partial: 'place', collection: @place.children, as: :node %>
         <% end %>
+
     </ul>
 <% else %>
     <p>Unable to find a Place.</p>

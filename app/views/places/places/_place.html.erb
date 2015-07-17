@@ -1,0 +1,8 @@
+    <p><%= link_to node.name, node %><p>
+    <% if node.has_children? %>
+    <div class="nested_place">
+        <%= render partial: 'place', collection: node.children, as: :node %>
+    </div>
+    <% end %>
+
+

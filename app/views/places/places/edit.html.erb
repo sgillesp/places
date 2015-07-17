@@ -34,7 +34,7 @@
     <h3>Add children:</h3>
     <ul>
         <% for p in Places::Place.all.each do %>
-            <% unless p == @place || @place.children.find(p) %> 
+            <% unless @place.children.find(p) %> 
                 <li><%= p.name %>  <%= link_to 'Add', [@place, :addchild, :place => p] %>
                 </li>
             <% end %>
