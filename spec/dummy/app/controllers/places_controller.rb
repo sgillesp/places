@@ -1,6 +1,6 @@
 require_dependency "application_controller" 
 require 'mongoid'
-require '../../app/models/places/place.rb'
+require 'places/place'
 include Places
 
 class PlacesController < ApplicationController

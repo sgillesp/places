@@ -11,7 +11,6 @@ module Places
         it 'instantiates a place' do
             expect(place.class.name).to eq("Places::Place")
         end
-
     end
 
 end

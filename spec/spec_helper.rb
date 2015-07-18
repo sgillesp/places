@@ -3,6 +3,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path("../../spec/dummy/config/environment", __FILE__)
 require 'rspec/rails'
 require 'factory_girl_rails'
+require 'engine_helper'
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -22,5 +23,9 @@ RSpec.configure do |config|
     config.infer_spec_type_from_file_location!
 
     config.include FactoryGirl::Syntax::Methods
+    #config.include EngineControllerTestMonkeyPatch, :type => :controller
+    config.before(:each, :type => :controller) { @routes = Places::Engine.routes }
+    config.before(:each, :type => :routing)    { @routes = Places::Engine.routes }
+
 end
 
