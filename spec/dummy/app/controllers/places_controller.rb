@@ -1,9 +1,10 @@
-require_dependency "places/application_controller"
+require_dependency "application_controller" 
 require 'mongoid'
+require '../../app/models/places/place.rb'
+include Places
 
-module Places
-  class PlacesController < ApplicationController
-    
+class PlacesController < ApplicationController
+
     def index
         @places = Place.all
     end
@@ -15,7 +16,7 @@ module Places
     def create
         @place = Place.new(place_params)
         if @place.save
-            redirect_to root_url, :notice => "Created place"
+            redirect_to :action => 'show', :id => @place.id, :notice => "Created #{@place.name}"
         else
             render 'new'
         end
@@ -205,5 +206,4 @@ module Places
             params.require(:place)
             params.permit(:remid)
         end
-  end
 end
