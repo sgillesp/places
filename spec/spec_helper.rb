@@ -3,7 +3,6 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path("../../spec/dummy/config/environment", __FILE__)
 require 'rspec/rails'
 require 'factory_girl_rails'
-require 'engine_helper'
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -26,6 +25,8 @@ RSpec.configure do |config|
     #config.include EngineControllerTestMonkeyPatch, :type => :controller
     config.before(:each, :type => :controller) { @routes = Places::Engine.routes }
     config.before(:each, :type => :routing)    { @routes = Places::Engine.routes }
-
+    # !! may want to change this later - once specifics about exceptions from Place
+    # !! are sorted out.
+    RSpec::Expectations.configuration.warn_about_potential_false_positives = false
 end
 

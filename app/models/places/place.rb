@@ -18,7 +18,7 @@ module Places
         par = pa
         while par != nil do
             if par == self
-                poop    # throw an exceptino - can't have circular reference
+                raise ArgumentError.new("Circular references not allowed.")    # throw an exceptino - can't have circular reference
             end
             par = par.parent
         end 
