@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "moped"
   s.add_dependency "mongoid"
   s.add_dependency "bson_ext"
+  s.add_dependency "mongoid-tree"
 
   s.add_development_dependency "rspec-rails", "3.3.2"
   s.add_development_dependency "factory_girl_rails"

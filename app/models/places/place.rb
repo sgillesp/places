@@ -1,11 +1,51 @@
+require 'places_configuration'
+require 'mongoid/tree'
+
+
 module Places
   class Place
-    include ::Mongoid::Document
+    # Class declarations
+    #
+
+    # configuration
+    #
+    # !! note that configuration is class-wide, rather than on an
+    #    instance-instance value; this could be changed, for example if
+    #    two simultaneous persistence models for the place were desired
+    #
+    class << self
+        attr_writer :configiration
+    end
+
+    def self.config
+        @configuration ||= Configuration.new
+    end
+
+    def self.configure
+        yield(config)
+    end
+
+    def self.reset
+        @configuration = Configuration.new
+    end
+
+    # handle configuration specific inclusions
+    case Place.config.use_tree_model
+        when :mongoid_tree
+            include ::Mongoid::Document
+            include ::Mongoid::Tree
+
+            # set policy for handling destroying of a root
+            before_destroy :nullify_children
+        else
+            # what is needed for the home-grown model
+            include ::Mongoid::Document
+    end
 
     field :name, type: String         # name of place
     field :description, type: String  # description
 
-    # has_one :association # this is the associated object (i.e. campaign or user, if present)
+    #belongs_to :association # this is the associated object (i.e. campaign or user, if present)
     
     def remove_parent
         # has to go from parent to child
@@ -54,8 +94,11 @@ module Places
     # relationship (with the parent of this object) is nullified.  
     # these are kept private so that we can control access (i.e. make sure the db is 
     # updated appropriately anytime something is changed/added)
-    has_many :children, class_name: "Places::Place" # places within this place
-    belongs_to :parent, class_name: "Places::Place", dependent: :nullify  # places containing this place 
-          
+    
+    if Place.config.use_tree_model == :own
+        has_many :children, class_name: "Places::Place" # places within this place
+        belongs_to :parent, class_name: "Places::Place", dependent: :nullify  # places containing this place 
+    end     
+
   end   # class Place
 end # module Places

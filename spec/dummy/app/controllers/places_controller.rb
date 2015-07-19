@@ -13,6 +13,18 @@ class PlacesController < ApplicationController
         @place = Place.new
     end
 
+    def destroy
+        @place = Place.find(place_params)
+        poop
+        if @place != nil
+            flash[:message] = "Deleted #{@place.name}"
+            @place.delete
+            redirect_to :action => :index
+        else
+            redirect_to :action => :edit, :id => params[:id], :error => "Unable to find place #{:id}"
+        end
+    end
+
     def create
         @place = Place.new(place_params)
         if @place.save
