@@ -45,7 +45,7 @@ module Places
     field :name, type: String         # name of place
     field :description, type: String  # description
 
-    #belongs_to :association # this is the associated object (i.e. campaign or user, if present)
+    belongs_to :association # this is the associated object (i.e. campaign or user, if present)
     
     def remove_parent
         # has to go from parent to child
@@ -95,6 +95,7 @@ module Places
     # these are kept private so that we can control access (i.e. make sure the db is 
     # updated appropriately anytime something is changed/added)
     
+    private
     if Place.config.use_tree_model == :own
         has_many :children, class_name: "Places::Place" # places within this place
         belongs_to :parent, class_name: "Places::Place", dependent: :nullify  # places containing this place 

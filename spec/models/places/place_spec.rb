@@ -23,6 +23,15 @@ module Places
                 place.description = "new_description"
                 expect(place.description).to eq("new_description")
             end
+
+            it 'allow access to children' do
+                expect { place.children }.not_to raise_error
+            end
+
+            it 'allow access to parent' do
+                expect { place.parent }.not_to raise_error
+            end
+
         end
 
         context 'tree structure' do
@@ -42,6 +51,20 @@ module Places
                 places[1].add_child(places[2])
                 expect { places[2].add_child(places[0]) }.to raise_error
             end
+
+            it 'allow cycle through children' do
+                places[0].children.each do |p|
+                    expect {p}.not_to eq(nil)
+                end
+            end
+
+            it 'allow real access to parent' do
+                places[0].add_child(places[1])
+                expect(places[1].parent).not_to eq(nil)
+                expect { places[1].parent.name }.not_to raise_error
+            end
+
+
 
         end
 

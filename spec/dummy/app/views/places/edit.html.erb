@@ -12,7 +12,7 @@
             <p><%= f.submit "Submit", :disable_with => 'Submitting...' %></p>
         <% end %>
     </ul>
-        <%= link_to "Delete #{@place.name}.", 'destroy' %>
+        <%= link_to "Delete #{@place.name}.", controller: :places, action: :destroy %>
     <ul>
 
     </ul>
