@@ -3,6 +3,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path("../../spec/dummy/config/environment", __FILE__)
 require 'rspec/rails'
 require 'factory_girl_rails'
+require 'places_helper'
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -29,4 +30,6 @@ RSpec.configure do |config|
     # !! are sorted out.
     RSpec::Expectations.configuration.warn_about_potential_false_positives = false
 end
+
+
 
