@@ -12,6 +12,10 @@
             <p><%= f.submit "Submit", :disable_with => 'Submitting...' %></p>
         <% end %>
     </ul>
+        <%= link_to "Delete.",  %>
+    <ul>
+
+    </ul>
 
     <% if @place.parent %>
     <h3>Parent:</h3>
@@ -34,7 +38,7 @@
     <h3>Add children:</h3>
     <ul>
         <% for p in Places::Place.all.each do %>
-            <% unless @place.children.find(p) %> 
+            <% unless p == @place || @place.children.find(p) %> 
                 <li><%= p.name %>  <%= link_to 'Add', [@place, :addchild, :place => p] %>
                 </li>
             <% end %>
