@@ -20,5 +20,7 @@ Rails.application.routes.draw do
   get 'places/addchild/:id' => 'places#addchild', as: 'place_addchild'
   get 'places/remchild/:id' => 'places#remchild', as: 'place_remchild'
 
+  root to: 'places#index'
+
   resources :places
 end
