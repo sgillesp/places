@@ -34,6 +34,9 @@ module Places
         when :mongoid_tree
             include ::Mongoid::Document
             include ::Mongoid::Tree
+
+            # set policy for handling destroying of a root
+            before_destroy :nullify_children
         else
             # what is needed for the home-grown model
             include ::Mongoid::Document
@@ -42,7 +45,7 @@ module Places
     field :name, type: String         # name of place
     field :description, type: String  # description
 
-    # has_one :association # this is the associated object (i.e. campaign or user, if present)
+    #belongs_to :association # this is the associated object (i.e. campaign or user, if present)
     
     def remove_parent
         # has to go from parent to child
