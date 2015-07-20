@@ -4,6 +4,10 @@
     
         <p>Name:        <%= link_to @place.name, @place %></p>
         <p>Description: <%= @place.description %></p>
+        <p>Address:     <%= @place.address %></p>
+        <% if @place.geocoded? %>
+            <p>Coordinates: <%= @place.latitude %>, <%= @place.longitude %></p>
+        <% end %>
 
         <% if @place.parent %>
         <h3>Parent:</h3>

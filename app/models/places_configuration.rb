@@ -5,11 +5,13 @@
 module Places 
     class Configuration
         attr_accessor   :use_tree_model
+        attr_accessor   :use_geocoder
 
     protected
         # initialize 
         def initialize
             @use_tree_model = :mongoid_tree
+            @use_geocoder = :true
         end
     end
 end

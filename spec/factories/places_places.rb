@@ -28,4 +28,24 @@ FactoryGirl.define do
     end
   end
 
+  factory :random_city_generator, :class => 'Places::City' do
+    name { Faker::Address.city }
+    description { Faker::Lorem.paragraph }
+  end
+
+  factory :random_state_generator, :class => 'Places::State' do
+    name { Faker::Address.state }
+    description { Faker::Lorem.paragraph }
+  end
+
+  factory :random_county_generator, :class => 'Places::County' do
+    name { Faker::Name.last_name }
+    description { Faker::Lorem.paragraph }
+  end
+
+  factory :random_country_generator, :class => 'Places::Country' do
+    name { Faker::Address.country }
+    description { Faker::Lorem.paragraph }
+  end
+
 end
