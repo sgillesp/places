@@ -4,6 +4,22 @@ require 'factory_girl'
 namespace :db do
     namespace :pop do
 
+        # method to create a place
+        def make_place (ptype)
+            case ptype
+                when 'country'
+                    FactoryGirl.create(:random_country_generator)
+                when 'state'
+                    FactoryGirl.create(:random_state_generator)
+                when 'county'
+                    FactoryGirl.create(:random_county_generator)
+                when 'city'
+                    FactoryGirl.create(:random_city_generator)
+                else
+                    FactoryGirl.create(:random_place_generator, ptype)
+            end
+        end
+
         # method which generates entries
         def pop_places (count, ptype = 'city')
 
@@ -14,7 +30,7 @@ namespace :db do
             
             dval = [ (count / 10), 1 ].max
             for i in 1..count
-                place = FactoryGirl.create(:random_place_generator, ptype.intern)
+                place = make_place(ptype)
                 if i % dval == 0
                     print('.'.green)
                 end

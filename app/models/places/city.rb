@@ -1,6 +1,7 @@
 
 module Places
   class City < Places::Place
+    include ::Mongoid::Document
 
     def entity_type
         return 'city'

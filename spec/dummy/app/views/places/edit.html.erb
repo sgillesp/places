@@ -1,7 +1,7 @@
 <h2> Edit a Place</h2>
 <% if @place %>
     <ul>
-        <%= form_for @place do |f| %>
+        <%= form_for places_path(@place) do |f| %>
             <%= f.label :name, "Name:" %>
             <%= f.text_field :name %> <br />
             <p><%= f.label :description, "Description:" %>
@@ -20,8 +20,8 @@
     <% if @place.parent %>
     <h3>Parent:</h3>
     <ul>
-        <li><%= link_to @place.parent.name, @place.parent %>
-            <%= link_to 'break', [@place, :breakparent] %></li>
+        <li><%= link_to @place.parent.name, places_path(@place.parent) %>
+            <%= link_to 'break', ['place', :breakparent, :id => @place] %></li>
     </ul>
     <% end %>
 
@@ -29,8 +29,8 @@
     <h3>Children:</h3>
     <ul>
         <% for child in @place.children do %>
-            <li><%= link_to child.name, child %> 
-                <%= link_to 'Remove', [@place, :remchild, :place => child] %></li>
+            <li><%= link_to child.name, places_path(child) %> 
+                <%= link_to 'Remove', ['place', :remchild, :place => child] %></li>
         <% end %> 
     </ul>
     <% end %>
@@ -39,7 +39,7 @@
     <ul>
         <% for p in Places::Place.all.each do %>
             <% unless p == @place || @place.children.find(p) %> 
-                <li><%= p.name %>  <%= link_to 'Add', [@place, :addchild, :place => p] %>
+                <li><%= p.name %>  <%= link_to 'Add', ['place', :addchild, :place => p] %>
                 </li>
             <% end %>
         <% end %>

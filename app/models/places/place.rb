@@ -71,7 +71,7 @@ module Places
 
     # need to have an address method (overloaded by subclasses)
     def address
-        return @name # default value, subclasses should override
+        return self.name # default value, subclasses should override
     end
 
     def remove_parent
@@ -133,6 +133,11 @@ module Places
         return true
     end
 
+    if Place.config.use_tree_model == :own
+        has_many :children, class_name: "Places::Place" # places within this place
+        belongs_to :parent, class_name: "Places::Place", dependent: :nullify  # places containing this place 
+    end   
+
     protected
         # sublcasses should override to make sure this child is appropriate
         def validate_child(ch)
@@ -147,11 +152,6 @@ module Places
         def is_valid_child(ch)
             return ((ch != nil) && (ch != self)) && validate_child(ch)
         end
-
-        if Place.config.use_tree_model == :own
-            has_many :children, class_name: "Places::Place" # places within this place
-            belongs_to :parent, class_name: "Places::Place", dependent: :nullify  # places containing this place 
-        end   
   
   end   # class Place
 end # module Places

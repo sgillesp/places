@@ -1,6 +1,7 @@
 
 module Places
   class County < Places::Place
+    include ::Mongoid::Document
 
     def entity_type
         return 'county'
