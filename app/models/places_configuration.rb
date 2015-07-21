@@ -2,15 +2,15 @@
 #   hold configuration parameters for the library
 #
 
-module Places 
+module Places
     class Configuration
         attr_accessor   :use_tree_model
         attr_accessor   :use_geocoder
 
     protected
-        # initialize 
+        # initialize
         def initialize
-            @use_tree_model = :mongoid_tree
+            @use_tree_model = :self
             @use_geocoder = :true
         end
     end

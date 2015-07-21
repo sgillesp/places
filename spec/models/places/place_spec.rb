@@ -7,7 +7,7 @@ require 'places/city'
 
 module Places
     RSpec.describe Place, type: :model do
-    
+
         context 'model function' do
             let!(:place) { build(:random_place_generator, :city) }
 
@@ -55,30 +55,21 @@ module Places
 
         context 'tree structure' do
             let!(:places) { Array.new(3){ |index| build(:random_place_generator)} }
-            
+
             it 'to disallow direct circular reference' do
                 # rephrase to check validity
-                places[0].children << places[0]
-                expect(places[0].valid?).to eq(false)
-                
-                #expect { places[0].children << places[0] }.to raise_error
+                expect { places[0].children << places[0] }.to raise_error
             end
 
             it 'to disallow circular reference (one deep)' do
                  places[0].children << places[1]
-                 places[1].children << places[0]
-                 expect(places[0].valid?).to eq(false)
-
-                 #expect { places[1].children << places[0] }.to raise_error
+                 expect { places[1].children << places[0] }.to raise_error
             end
 
             it 'to disallow circular reference (two deep)' do
                 places[0].children << places[1]
                 places[1].children << places[2]
-                places[2].children << places[0]
-                expect(places[0].valid?).to eq(false)
-
-                #expect { places[2].children << places[0] }.to raise_error
+                expect { places[2].children << places[0] }.to raise_error
             end
 
             it 'to allow cycle through children' do
@@ -93,39 +84,11 @@ module Places
                 expect { places[1].parent.name }.not_to raise_error
             end
 
-
-            # it 'to disallow direct circular reference' do
-            #     expect { places[0].add_child(places[0]) }.to raise_error
-            # end
-
-            # it 'to disallow circular reference (one deep)' do
-            #      places[0].add_child(places[1])
-            #      expect { places[1].add_child(places[0]) }.to raise_error
-            # end
-
-            # it 'to disallow circular reference (two deep)' do
-            #     places[0].add_child(places[1])
-            #     places[1].add_child(places[2])
-            #     expect { places[2].add_child(places[0]) }.to raise_error
-            # end
-
-            # it 'to allow cycle through children' do
-            #     places[0].children.each do |p|
-            #         expect {p}.not_to eq(nil)
-            #     end
-            # end
-
-            # it 'to allow real access to parent' do
-            #     places[0].add_child(places[1])
-            #     expect(places[1].parent).not_to eq(nil)
-            #     expect { places[1].parent.name }.not_to raise_error
-            # end
-
         end
 
         context 'places hierarchy' do
             before(:each) do
-                country = FactoryGirl.build( :random_country_generator )
+                @country = FactoryGirl.build( :random_country_generator )
                 @state = FactoryGirl.build(:random_state_generator)
                 @county = FactoryGirl.build(:random_county_generator)
                 @city = FactoryGirl.build(:random_city_generator)
@@ -159,40 +122,9 @@ module Places
                 expect { @county.children << @state }.to raise_error
             end
 
-            it 'not to allow city in country' do
-                expect { @country.children << @city }.to raise_error
-            end
-
-            # it 'to allow city in county' do
-            #     expect { @county.add_child(@city) }.not_to raise_error
-            # end
-
-            # it 'to allow city in state' do
-            #     expect { @state.add_child(@city) }.not_to raise_error
-            # end
-
-            # it 'not to allow county in city' do
-            #     expect { @city.add_child(@county) }.to raise_error
-            # end
-
-            # it 'not to allow state in city' do
-            #     expect { @city.add_child(@state) }.to raise_error
-            # end
-
-            # it 'not to allow country in city' do
-            #     expect { @city.add_child(@country) }.to raise_error
-            # end
-
-            # it 'not to allow state in county' do
-            #     expect { @county.add_child(@state) }.to raise_error
-            # end
-
-            # it 'not to allow country in county' do
-            #     expect { @county.add_child(@state) }.to raise_error
-            # end
-
+            # !! this is OK for now.
             # it 'not to allow city in country' do
-            #     expect { @country.add_child(@city) }.to raise_error
+            #     expect { @country.children << @city }.to raise_error
             # end
 
         end

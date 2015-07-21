@@ -8,9 +8,9 @@ module Places
     end
 
     # states can only be added to countries
-    def is_valid_parent(pa)
-        return [ 'country', 'state', 'county' ].include?(pa.entity_type)
+    def is_valid_parent?(pa)
+        invalid_parent_error if ![ 'country', 'state', 'county' ].include?(pa.entity_type)
     end
-  
+
   end   # class State
 end # module Places

@@ -1,4 +1,4 @@
-require_dependency "application_controller" 
+require_dependency "application_controller"
 require 'mongoid'
 require 'places/place'
 include Places
@@ -39,12 +39,12 @@ class PlacesController < ApplicationController
         else
             @places.errors.add(:base, err.message)
         end
-                            
+
         render 'new'
     end
 
     def show
-        # must have a valid :id to show that 
+        # must have a valid :id to show that
         if params[:id] == nil
             flash[:message] = "No such Place in database"
             render 'index'
@@ -63,13 +63,13 @@ class PlacesController < ApplicationController
         #     @place.errors.add(:email, "already exists for another account")
         # else
         #     @place.errors.add(:base, err.message)
-        # end        
+        # end
         flash[:message] = "Duplicate entry for Place"
 
         render 'index'
     end
 
-    def edit 
+    def edit
         # try to find the place, but catch if the place cannot be found
         @place = Place.find(params[:id])
 
@@ -82,7 +82,7 @@ class PlacesController < ApplicationController
         #     @place.errors.add(:email, "already exists for another account")
         # else
         #     @place.errors.add(:base, err.message)
-        # end        
+        # end
         flash[:message] = "Duplicate entry for Place"
 
         render 'index'
@@ -91,7 +91,7 @@ class PlacesController < ApplicationController
     def update
         # try to find the place, but catch if the place cannot be found
         @place = Place.find(params[:id])
-        if @place.update_attributes(place_params) 
+        if @place.update_attributes(place_params)
             if @place.save
                 flash[:message] = "#{@place.name} updated"
                 redirect_to :action => 'show', :id => @place.id
@@ -112,7 +112,7 @@ class PlacesController < ApplicationController
         #     @place.errors.add(:email, "already exists for another account")
         # else
         #     @place.errors.add(:base, err.message)
-        # end        
+        # end
         flash[:message] = "Duplicate entry for Place"
 
         render 'edit'
@@ -122,9 +122,8 @@ class PlacesController < ApplicationController
         @place = Place.find(params[:id])
         if @place
             child = Place.find(params[:place])
-            if child 
-                if @place.children << child
-                # !! deprecatedif @place.add_child(child)
+            if child
+                if do_addchild(child)
                     if @place.save()
                         flash[:message] = "#{child.name} added to #{@place.name}"
                     else
@@ -140,7 +139,7 @@ class PlacesController < ApplicationController
             flash[:error] = "could not find place, corresponding to #{:id}"
         end
         # ?? no need to redirect, right? - fall back to page (i.e. edit)
-    
+
         render 'edit'
 
     # this should not happen if raise_not_found_error = false in mongoid.yml
@@ -153,8 +152,8 @@ class PlacesController < ApplicationController
         @place = Place.find(params[:id])
         if @place
             child = Place.find(params[:place])
-            if child 
-                if @place.children.delete(child)
+            if child
+                if do_remchild(child)
                 # !! deprecated if @place.remove_child(child)
                     if @place.save()
                         flash[:message] = "#{child.name} removed from #{@place.name}"
@@ -171,7 +170,7 @@ class PlacesController < ApplicationController
             flash[:error] = "could not find place, corresponding to #{:id}"
         end
         # ?? no need to redirect, right? - fall back to page (i.e. edit)
-    
+
         render 'edit'
 
         # this should not happen if raise_not_found_error = false in mongoid.yml
@@ -183,9 +182,9 @@ class PlacesController < ApplicationController
     def breakparent
         @place = Place.find(params[:id])
         if @place
-            # this could be made more complex so as to avoid specifying whether there is or 
+            # this could be made more complex so as to avoid specifying whether there is or
             # is not a single parent (not enforcing tree structure in the controller)
-            @place.remove_parent
+            do_remparent
         else
             flash[:error] = "could not find place, corresponding to #{:id}"
         end
@@ -199,13 +198,17 @@ class PlacesController < ApplicationController
 
     private
         # actual method is hidden to keep hidden
-        # def do_addchild(pm)
-        #     @place.add_child(Place.find(params[:place]))
-        # end
+        def do_addchild(ch)
+             @place.children << ch
+        end
 
-        # def do_remchild(pm)
-        #     @place.remove_child(Place.find(params[:place]))
-        # end
+        def do_remchild(ch)
+             @place.children.delete(ch)
+        end
+
+        def do_remparent
+            @place.parent.delete(@place)
+        end
 
         def place_params
             params.require(:place).permit(:name, :description)

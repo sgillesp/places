@@ -9,9 +9,9 @@ module Places
     field   :capitol, type: String, default: "Olympia"
 
     # states can only be added to countries
-    def is_valid_parent(pa)
-        return pa.entity_type == "country"
+    def is_valid_parent?(pa)
+        invalide_parent_error if pa.entity_type != "country"
     end
-  
+
   end   # class State
 end # module Places
