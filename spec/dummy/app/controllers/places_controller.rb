@@ -123,7 +123,8 @@ class PlacesController < ApplicationController
         if @place
             child = Place.find(params[:place])
             if child 
-                if @place.add_child(child)
+                if @place.children << child
+                # !! deprecatedif @place.add_child(child)
                     if @place.save()
                         flash[:message] = "#{child.name} added to #{@place.name}"
                     else
@@ -153,7 +154,8 @@ class PlacesController < ApplicationController
         if @place
             child = Place.find(params[:place])
             if child 
-                if @place.remove_child(child)
+                if @place.children.delete(child)
+                # !! deprecated if @place.remove_child(child)
                     if @place.save()
                         flash[:message] = "#{child.name} removed from #{@place.name}"
                     else
@@ -197,13 +199,13 @@ class PlacesController < ApplicationController
 
     private
         # actual method is hidden to keep hidden
-        def do_addchild(pm)
-            @place.add_child(Place.find(params[:place]))
-        end
+        # def do_addchild(pm)
+        #     @place.add_child(Place.find(params[:place]))
+        # end
 
-        def do_remchild(pm)
-            @place.remove_child(Place.find(params[:place]))
-        end
+        # def do_remchild(pm)
+        #     @place.remove_child(Place.find(params[:place]))
+        # end
 
         def place_params
             params.require(:place).permit(:name, :description)

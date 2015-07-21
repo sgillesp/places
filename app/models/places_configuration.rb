@@ -10,7 +10,7 @@ module Places
     protected
         # initialize 
         def initialize
-            @use_tree_model = :own
+            @use_tree_model = :mongoid_tree
             @use_geocoder = :true
         end
     end
