@@ -3,6 +3,9 @@ include Places
 
 Rails.application.routes.draw do
 
+  resources :people
+  resources :people
+  resources :people
   mount Places::Engine => "/places"
 
 #  get 'place/create' => 'places#new', as: 'create'

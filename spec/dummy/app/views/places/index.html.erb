@@ -2,7 +2,7 @@
 
 <% if @places %>
     <% for place in @places %>
-        <p><%= link_to place.name, place_path(place) %>:  <%= place.description %></p>
+        <p><%= link_to place.name, place_path(place) %> (<%= place.entity_type %>):  <%= place.description %></p>
     <% end %>
 <% else %>
     <p>No places defined.</p>

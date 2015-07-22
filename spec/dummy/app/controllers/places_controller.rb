@@ -93,8 +93,7 @@ class PlacesController < ApplicationController
         @place = Place.find(params[:id])
         if @place.update_attributes(place_params)
             if @place.save
-                flash[:message] = "#{@place.name} updated"
-                redirect_to :action => 'show', :id => @place.id
+                redirect_to :action => 'show', :id => @place.id, :notice => "Created #{@place.name}"
             else
                 redirect_to(:action => 'show', :id => @place.id, :error => "Utter failure".red)
             end

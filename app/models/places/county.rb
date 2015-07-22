@@ -3,13 +3,14 @@ module Places
   class County < Places::Place
     include ::Mongoid::Document
 
-    def entity_type
-        return 'county'
-    end
-
     # states can only be added to countries
     def is_valid_parent?(pa)
-        invalid_parent_error if pa.entity_type != "state"
+      pa.entity_type == "state"
+    end
+
+    protected
+    def get_entity_type
+        return 'county'
     end
 
   end   # class State

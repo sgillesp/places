@@ -1,8 +1,6 @@
-    <p><%= link_to node.name, places_path(node) %><p>
+    <p><%= link_to "#{node.name} (#{node.entity_type})", places_path(node) %><p>
     <% if node.has_children? %>
     <div class="nested_place">
         <%= render partial: 'place', collection: node.children, as: :node %>
     </div>
     <% end %>
-
-

@@ -3,12 +3,13 @@ module Places
   class Country < Places::Place
     include ::Mongoid::Document
 
-    def entity_type
-        return 'country'
+    def is_valid_parent?(pa)
+      pa.entity_type == 'planet'
     end
 
-    def is_valid_parent?(pa)
-      invalid_parent_error unless pa.entity_type = 'planet'
+    protected
+    def get_entity_type
+        'country'
     end
 
   end   # class State

@@ -1,4 +1,4 @@
-require 'places_configuration'
+require 'places/places_configuration'
 require 'tree'
 require 'geocoder'
 
@@ -17,7 +17,7 @@ module Places
     end
 
     def self.config
-        @configuration ||= Configuration.new
+        @configuration ||= Places::Configuration.new
     end
 
     def self.configure
@@ -25,7 +25,11 @@ module Places
     end
 
     def self.reset
-        @configuration = Configuration.new
+        @configuration = Places::Configuration.new
+    end
+
+    def self.primary_key
+      "_id"
     end
 
     case Place.config.use_tree_model
@@ -42,6 +46,8 @@ module Places
 
     # use geocoding?
     if Place.config.use_geocoder
+        Geocoder.configure( lookup: :google, timeout: 3, units: :mi)
+
         # geographical info
         field :coordinates, :type => Array
 
@@ -49,6 +55,8 @@ module Places
         include Geocoder::Model::Mongoid
         geocoded_by :address
         after_validation    :geocode
+
+        index({ location: "2dsphere" }, { min: -200, max: 200 })
 
         def latitude
             self.to_coordinates[0]
@@ -61,18 +69,28 @@ module Places
 
     field :name, type: String         # name of place
     field :description, type: String  # description
-    #field :place_type, type: String, default: ->{ self.set_entity_type }  # type of entity (i.e. state, county, city, etc.)
+    field :entity_type, type: String, default: ->{ self.get_entity_type }  # type of entity (i.e. state, county, city, etc.)
 
-    belongs_to :association # this is the associated object (i.e. campaign or user, if present)
+    belongs_to :owner, polymorphic: true # this is the associated object (i.e. campaign or user, if present)
 
     # need to have an address method (overloaded by subclasses)
     def address
-        return self.name # default value, subclasses should override
+        if owner != nil && owner.respond_to?(:address)
+          owner.address
+        else
+          return self.name # default value, subclasses should override
+        end
     end
 
-    # provide access to the entity type - subclasses should override
-    def entity_type
-        return 'place'
+    # subclasses should override to make sure the parent is appropriate for this child
+    def is_valid_parent?(pa)
+        return true
+    end
+
+    # check for validity, with adding error checking this would be the appropriate
+    # place to add exceptions, etc. (to allow recovery)
+    def is_valid_child?(ch)
+        return ch.is_valid_parent?(self)
     end
 
     # don't want to index off of place name? - could have multiple entries w. similar names
@@ -84,26 +102,21 @@ module Places
     # ** how to do this in Ruby - doesn't have 'const' access similar to c++, etc.
 
     protected
-        # subclasses should override to make sure the parent is appropriate for this child
-        def is_valid_parent?(pa)
-            return true
+
+        # set the entity type (each subclass should override)
+        def get_entity_type
+          'place'
         end
 
-        # check for validity, with adding error checking this would be the appropriate
-        # place to add exceptions, etc. (to allow recovery)
-        def is_valid_child?(ch)
-            return ch.is_valid_parent?(self)
+        def validate_child(ch)
+          raise InvalidChild, "Cannot add #{ch.name} (#{ch.entity_type}) as child of #{self.name} (#{self.entity_type})" if !is_valid_child?(ch)
         end
 
-        # called from is_valid_child, will raise an exception
-        def invalid_child_error(ch)
-          raise InvalidChild, "Cannot add #{ch.name} (#{ch.entity_type}) as child of #{self.name} (#{self.entity_type})"
+        def validate_parent(pa)
+          raise InvalidParent, "Cannot add #{pa.name} (#{pa.enity_type}) as parent of #{self.name} (#{self.entity_type})" if !is_valid_parent?(pa)
         end
 
-        # called from is_valid_parent, will raise and exception
-        def invalid_parent_error(pa)
-          raise InvalidParent, "Cannot add #{pa.name} (#{pa.enity_type}) as parent of #{self.name} (#{self.entity_type})"
-        end
+    private
 
   end   # class Place
 end # module Places

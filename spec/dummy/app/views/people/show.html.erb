@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @person.name %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @person.address %>
+  <strong>Lat:</strong><%= @person.place_avatar.latitude.to_s %>
+  <strong>Lon:</strong><%= @person.place_avatar.longitude.to_s %>
+  <br />
+  <ul>
+  <% @nearby.each do |n| %>
+    <li><%= link_to n.owner.name, n.owner %></li>
+  <% end %>
+  </ul>
+</p>
+
+<%= link_to 'Edit', edit_person_path(@person) %> |
+<%= link_to 'Back', people_path %>
+
+<br />
+<div id="mapframe">
+<iframe
+  width="600"
+  height="450"
+  frameborder="0" style="border:0"
+  src="<%= "https://www.google.com/maps/embed/v1/place?key=#{Places::Place.config.google_api_key}&center=#{@person.place_avatar.latitude},#{@person.place_avatar.longitude}&q=#{@person.address}" %>&zoom=15">
+</iframe>
+</div>

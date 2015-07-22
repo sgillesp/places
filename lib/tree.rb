@@ -10,7 +10,7 @@ module Places
     # this is what will be included in the class that uses this
     #
     included do
-      has_many :children, :class_name => self.name, :inverse_of => :parent, :before_add => :validate_child
+      has_many :children, :class_name => self.name, :inverse_of => :parent, :before_add => :validate_child!
       belongs_to :parent, :class_name => self.name, :inverse_of => :children
 
       # this allows for faster database searchign when adding/checking validity
@@ -84,11 +84,11 @@ module Places
 
     # perform validation on whether this child is an acceptable child or not?
     # the base_class must have a method 'is_valid_child?' to implement domain logic there
-    def validate_child(ch)
+    def validate_child!(ch)
       raise InvalidChild "Attempted to add nil child to #{self}" if (ch == nil)
       raise CircularRelation, "Circular relationship adding #{ch} to #{self}" if self.descendant_of?(ch)
       if base_class.method_defined? :is_valid_child?
-        self.is_valid_child?(ch)  # this should throw an error if not valid
+        self.validate_child(ch)  # this should throw an error if not valid
       end
     end
 
